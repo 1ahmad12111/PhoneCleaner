@@ -2,7 +2,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { Paths } from 'expo-file-system';
 import { LinearGradient } from 'expo-linear-gradient';
 import { router } from 'expo-router';
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo } from 'react';
 import { ScrollView, StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
@@ -27,7 +27,6 @@ export default function Home() {
   const c = useColors();
   const { isPro } = usePro();
   const { permission, result, scanning, progress, scan, stats } = useScan();
-  const [disk, setDisk] = useState(readDisk);
 
   useEffect(() => {
     if (permission?.granted && !result && !scanning) scan();
@@ -35,15 +34,13 @@ export default function Home() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [permission?.granted]);
 
-  useEffect(() => {
-    setDisk(readDisk());
-  }, [stats.bytesFreed, result]);
-
   const cleanable = useMemo(
     () => (result ? ORDER.reduce((s, cat) => s + sumSize(suggestedItems(result, cat)), 0) : 0),
     [result],
   );
 
+  // Cheap synchronous native getters; re-read on every render so it reflects deletions.
+  const disk = readDisk();
   const used = disk.total - disk.free;
   const pct = disk.total ? Math.round((used / disk.total) * 100) : 0;
   const pctScan = progress.total ? Math.round((progress.done / progress.total) * 100) : 0;

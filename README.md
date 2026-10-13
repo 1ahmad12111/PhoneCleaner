@@ -48,4 +48,5 @@ docs/               privacy policy (GitHub Pages) and App Store launch kit
 
 ```bash
 npm run typecheck
+npm run lint
 ```

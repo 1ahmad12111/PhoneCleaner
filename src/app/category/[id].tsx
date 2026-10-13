@@ -1,5 +1,5 @@
 import { Stack, useLocalSearchParams } from 'expo-router';
-import { useEffect, useMemo, useState } from 'react';
+import { useMemo, useState } from 'react';
 import { Alert, FlatList, Pressable, StyleSheet, Text, View, useWindowDimensions } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
@@ -26,10 +26,12 @@ export default function CategoryScreen() {
   const items = useMemo(() => (result ? categoryItems(result, cat) : []), [result, cat]);
   const groups: MediaGroup[] = result && info.grouped ? result.groups[cat as 'similar' | 'duplicates'] : [];
 
-  // Pre-select our suggestion whenever the data changes.
-  useEffect(() => {
-    if (result) setSelected(new Set(suggestedItems(result, cat).map((i) => i.id)));
-  }, [result, cat]);
+  // Pre-select our suggestion whenever the data changes (state adjusted during render, not in an effect).
+  const [selectionSource, setSelectionSource] = useState<{ result: typeof result; cat: CategoryId } | null>(null);
+  if (selectionSource?.result !== result || selectionSource?.cat !== cat) {
+    setSelectionSource({ result, cat });
+    setSelected(new Set(result ? suggestedItems(result, cat).map((i) => i.id) : []));
+  }
 
   const selectedItems = useMemo(() => items.filter((i) => selected.has(i.id)), [items, selected]);
   const size = Math.floor((width - spacing.md * 2) / COLS);

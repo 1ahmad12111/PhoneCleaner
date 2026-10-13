@@ -47,12 +47,10 @@ export default function Paywall() {
     () => [...packages].sort((a, b) => (a.packageType === PACKAGE_TYPE.ANNUAL ? -1 : b.packageType === PACKAGE_TYPE.ANNUAL ? 1 : 0)),
     [packages],
   );
-  const [selected, setSelected] = useState<PurchasesPackage | null>(null);
   const [busy, setBusy] = useState(false);
 
-  useEffect(() => {
-    if (!selected && sorted.length) setSelected(sorted[0]);
-  }, [sorted, selected]);
+  const [picked, setSelected] = useState<PurchasesPackage | null>(null);
+  const selected = picked ?? sorted[0] ?? null;
 
   useEffect(() => {
     if (isPro) close();

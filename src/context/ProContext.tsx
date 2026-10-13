@@ -34,16 +34,13 @@ const hasPro = (info: CustomerInfo) => !!info.entitlements.active[config.entitle
 
 export function ProProvider({ children }: { children: ReactNode }) {
   const [isPro, setIsPro] = useState(false);
-  const [ready, setReady] = useState(false);
+  const [ready, setReady] = useState(!canUsePurchases);
   const [packages, setPackages] = useState<PurchasesPackage[]>([]);
   const [used, setUsed] = useState(0);
 
   useEffect(() => {
     getQuotaUsed().then(setUsed);
-    if (!canUsePurchases) {
-      setReady(true);
-      return;
-    }
+    if (!canUsePurchases) return;
     Purchases.configure({ apiKey: config.revenueCatKey! });
     const listener = (info: CustomerInfo) => setIsPro(hasPro(info));
     Purchases.addCustomerInfoUpdateListener(listener);

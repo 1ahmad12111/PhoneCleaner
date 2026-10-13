@@ -55,8 +55,8 @@ export function ScanProvider({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     MediaLibrary.getPermissionsAsync().then(setPermission).catch(() => {});
-    refreshStats();
-  }, [refreshStats]);
+    getStats().then(setStats);
+  }, []);
 
   const requestPermission = useCallback(async () => {
     const res = await MediaLibrary.requestPermissionsAsync();

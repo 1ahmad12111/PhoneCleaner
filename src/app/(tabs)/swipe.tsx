@@ -1,7 +1,7 @@
 import { Ionicons } from '@expo/vector-icons';
 import * as Haptics from 'expo-haptics';
 import { Image } from 'expo-image';
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useMemo, useState } from 'react';
 import { Animated, FlatList, PanResponder, Pressable, ScrollView, StyleSheet, Text, View, useWindowDimensions } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
@@ -23,11 +23,8 @@ export default function Swipe() {
   const [reviewing, setReviewing] = useState(false);
   const [busy, setBusy] = useState(false);
 
-  useEffect(() => {
-    if (!monthKey && months.length) setMonthKey(months[0].key);
-  }, [months, monthKey]);
-
-  const month = months.find((m) => m.key === monthKey);
+  const month = months.find((m) => m.key === monthKey) ?? months[0];
+  const activeKey = month?.key ?? null;
   const decided = new Set(decisions.map((d) => d.item.id));
   const queue = month ? month.items.filter((i) => !decided.has(i.id)) : [];
   const current = queue[0];
@@ -75,7 +72,7 @@ export default function Swipe() {
       <Text style={[styles.h1, { color: c.text }]}>Swipe Cleaner</Text>
       <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.chips} style={{ flexGrow: 0 }}>
         {months.map((m) => {
-          const active = m.key === monthKey;
+          const active = m.key === activeKey;
           return (
             <Pressable
               key={m.key}
@@ -157,10 +154,10 @@ export default function Swipe() {
 
 function SwipeCard({ item, width, onDecide }: { item: MediaItem; width: number; onDecide: (remove: boolean) => void }) {
   const c = useColors();
-  const pos = useRef(new Animated.ValueXY()).current;
+  const [pos] = useState(() => new Animated.ValueXY());
   const threshold = width * 0.3;
 
-  const responder = useRef(
+  const [responder] = useState(() =>
     PanResponder.create({
       onMoveShouldSetPanResponder: (_, g) => Math.abs(g.dx) > 6,
       onPanResponderMove: Animated.event([null, { dx: pos.x, dy: pos.y }], { useNativeDriver: false }),
@@ -175,7 +172,7 @@ function SwipeCard({ item, width, onDecide }: { item: MediaItem; width: number; 
         }
       },
     }),
-  ).current;
+  );
 
   const rotate = pos.x.interpolate({ inputRange: [-width, 0, width], outputRange: ['-12deg', '0deg', '12deg'] });
   const keepOpacity = pos.x.interpolate({ inputRange: [0, threshold], outputRange: [0, 1], extrapolate: 'clamp' });
