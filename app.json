@@ -1,0 +1,70 @@
+{
+  "expo": {
+    "name": "Cleaner Neat",
+    "slug": "cleaner-neat",
+    "scheme": "cleanerneat",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "automatic",
+    "splash": {
+      "image": "./assets/splash-icon.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#0B7A75"
+    },
+    "ios": {
+      "bundleIdentifier": "com.cleanerneat.app",
+      "buildNumber": "1",
+      "supportsTablet": false,
+      "infoPlist": {
+        "ITSAppUsesNonExemptEncryption": false,
+        "NSPhotoLibraryUsageDescription": "Cleaner Neat scans your photos and videos on-device to find duplicates, similar shots, screenshots and large videos you can remove to free up storage.",
+        "NSPhotoLibraryAddUsageDescription": "Cleaner Neat needs access to manage the photos you choose to clean up.",
+        "NSContactsUsageDescription": "Cleaner Neat checks your contacts on-device to find duplicates and incomplete entries you can merge or remove."
+      }
+    },
+    "android": {
+      "package": "com.cleanerneat.app",
+      "versionCode": 1,
+      "adaptiveIcon": {
+        "backgroundColor": "#0B7A75",
+        "foregroundImage": "./assets/android-icon-foreground.png",
+        "backgroundImage": "./assets/android-icon-background.png",
+        "monochromeImage": "./assets/android-icon-monochrome.png"
+      },
+      "predictiveBackGestureEnabled": false
+    },
+    "web": {
+      "favicon": "./assets/favicon.png"
+    },
+    "plugins": [
+      "expo-router",
+      [
+        "expo-splash-screen",
+        {
+          "image": "./assets/splash-icon.png",
+          "imageWidth": 160,
+          "resizeMode": "contain",
+          "backgroundColor": "#0B7A75"
+        }
+      ],
+      [
+        "expo-media-library",
+        {
+          "photosPermission": "Cleaner Neat scans your photos and videos on-device to find duplicates, similar shots, screenshots and large videos you can remove to free up storage.",
+          "savePhotosPermission": "Cleaner Neat needs access to manage the photos you choose to clean up.",
+          "isAccessMediaLocationEnabled": false
+        }
+      ],
+      [
+        "expo-contacts",
+        {
+          "contactsPermission": "Cleaner Neat checks your contacts on-device to find duplicates and incomplete entries you can merge or remove."
+        }
+      ]
+    ],
+    "experiments": {
+      "typedRoutes": true
+    }
+  }
+}
